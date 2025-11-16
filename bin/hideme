@@ -1,0 +1,164 @@
+#!/bin/bash
+
+# -e Exit immediately if a command exits with a non zero status
+# -u Threat unset variables as an error
+# -o Causes a pipeline to return the exit status of last command
+# set +e +u +o pipefail
+# set -e -u -o pipefail
+# set -euo pipefail
+
+
+#  ========================================================
+#       HIDE.ME VPN
+#  =========================================================
+# |                                                         |
+# |                                                         |
+# |      ===============                                    |
+# |   =====================                                 |
+# |  ==                   ==                                |
+# |      _=============_                          /=====\\  |
+# |         _=======_               _============|      ||  |
+# |           /==\                  \/\/\_/\/\__/|      //  |      
+# |           \==/                                \____//   |        
+# |_________________________________________________________|
+
+
+#  ========================================================
+#       DOC [ details ]
+#  =========================================================
+# |                                                         |
+# | Script: Hide.me VPN                                     |
+# | Author: Alexander Edemalm                               |
+# | Created: June 11, 2025                                  |
+# | Updated: Juli 1, 2025                                   |
+# |_________________________________________________________|
+
+
+#  ========================================================
+#       DOC [ description ]
+#  =========================================================
+# |                                                         |
+# | Provides unified commands for managing hide.me VPN      |
+# | connections. This includes standard and Dynamic Port    |
+# | Forwarding connections. This script avoids nftables     |
+# | management.                                             |
+# |_________________________________________________________|
+
+
+#  ========================================================
+#       List [ Function ]
+#  =========================================================
+# |                                                         |
+# | Function to list alliases and functions defined only    |
+# | within this file. This very function is decoupled and   |
+# | can therefore easily be adopted into new bash files.    |
+# |_________________________________________________________|
+
+
+_commands() {
+    echo -e "\n\n=== COMMANDS       " \
+            "\n\n====== ALIAS       " \
+            "\n - list_commands     " \
+            "\n - commands          " \
+            "\n - list              " \
+            "\n\n====== FUNCTIONS   " \
+            "\n - connect           " \
+            "\n - connect_server    " \
+            "\n - disconnect        " \
+            "\n - status            "
+}
+
+
+#  ========================================================
+#       SECTION [ Aliases ]
+#  =========================================================
+# | - list_commands                                         |
+# | - commands                                              |
+# | - list                                                  |
+# |_________________________________________________________|
+
+
+#alias list_commands='_commands' 
+
+#alias commands='commands'
+
+#alias list='commands'
+
+
+#  ========================================================
+#       SECTION [ Sourcing & Functions ]
+#  =========================================================
+# |                                                         |
+# |                                                         |
+# |_________________________________________________________|
+
+_source_files() {
+    
+    local DIR_FILE
+    DIR_FILE=$(dirname "$(realpath "$0")")
+    
+    local DIR_TARGET
+    DIR_TARGET="${DIR_FILE}/../src"
+
+    if [ -d "$DIR_TARGET" ]; then
+        # Loop through all .sh files
+        for file in "$DIR_TARGET"/*.sh; do
+
+            if [ -f "$file" ]; then 
+                # shellcheck disable=SC1090
+                source "$file"
+            fi
+        done
+    else 
+        echo ""
+    fi
+}
+
+_is_argument_passed() {
+    
+    if [ $# -eq 0 ]; then
+        _commands
+        exit 0
+    fi
+}
+
+_route_argument() {
+    
+    local argument="$1"
+
+    case "${argument,,}" in
+        connect)
+            connect "$@"
+            shift 
+            ;;
+        connect_server)    
+            connect_server "$@"
+            shift
+            ;;
+        disconnect)
+            disconnect
+            shift
+            ;;
+        status)
+            status
+            shift
+            ;;
+        *)
+            echo "Error: Unknown command '$1'" >&2
+            _commands
+            exit 1
+        ;;
+    esac
+}
+
+#  ========================================================
+#       SECTION [ Execution ]
+#  =========================================================
+# |                                                         |
+# |_________________________________________________________|
+
+_source_files
+
+_is_argument_passed "$@"
+
+_route_argument "$@"
