@@ -53,7 +53,6 @@ _select_server() {
     return 1
 }
 
-
 # --- loading_animation_start ---
 # Arguments:
 #   $1 (String): Title
@@ -78,7 +77,6 @@ _loading_animation_start() {
     _global_loading_variable=$!
 }
 
-
 # --- loading_animation_stop ---
 # Arguments:
 #   N/A
@@ -91,12 +89,6 @@ _loading_animation_stop() {
         echo -ne "\r\033[K" 
     fi
 }
-
-
-#  ========================================================
-#       SECTION-INNER [ Print Formatted ]
-#  =========================================================
-
 
 # --- print_formatted_list ---
 # Arguments:
@@ -120,7 +112,6 @@ _print_formatted_list() {
     _print_formatted_list__bottom $((content_width - 1))
 }
 
-
 # --- print_header ---
 # Arguments:
 #   $1 (Integer): eq_left - Number of '=' characters to print on the left.
@@ -138,7 +129,6 @@ _print_formatted_list__header() {
     echo ""
 }
 
-
 # --- print_options ---
 # Arguments:
 #   $1 (Integer): content_width - The inner width for text elements (excluding borders).
@@ -154,7 +144,6 @@ _print_formatted_list__options() {
         printf "| %s%*s |\n" "$item" "$padding_needed" ""
     done
 }
-
 
 # --- print_bottom_border ---
 # Arguments:
